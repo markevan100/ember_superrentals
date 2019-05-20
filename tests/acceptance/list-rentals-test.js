@@ -4,6 +4,8 @@ import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import {
   click,
   currentURL,
+  fillIn,
+  triggerKeyEvent,
   visit
 } from '@ember/test-helpers';
 
@@ -34,6 +36,11 @@ module('Acceptance | list rentals', function(hooks) {
   });
 
   test('should filter the list of rentals by city.', async function (assert) {
+    await visit('/');
+    await fillIn('.list-filter input', 'portland');
+    await triggerKeyEvent('.list-filter input', 'keyup', 80);
+    assert.equal(this.element.querySelectorAll('.results .listing').length, 1, 'should display 1 listing');
+    assert.ok(this.element.querySelector('.listing .location').textContent.includes('Portland'), 'should contain 1 listing with location Portland');
   });
 
   test('should show details for a selected rental', async function (assert) {
